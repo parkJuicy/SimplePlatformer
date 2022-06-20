@@ -8,12 +8,13 @@ namespace InputSystem
 
     public enum KeyName
     {
-        Right,
-        Left,
-        Up,
-        Down,
         Attack,
         Jump,
         Dash,
+    }
+    public enum AxisKeyName
+    {
+        Horizontal,
+        Vertical,
     }
 }
