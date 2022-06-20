@@ -13,17 +13,16 @@ MonoBehaviour:
   m_Name: InputSetting
   m_EditorClassIdentifier: 
   _key:
-  - _name: Right
-    _code: 275
-  - _name: Left
-    _code: 276
-  - _name: Up
-    _code: 273
-  - _name: Down
-    _code: 274
   - _name: Attack
     _code: 120
   - _name: Jump
     _code: 99
   - _name: Dash
     _code: 122
+  _axisKey:
+  - _name: Horizontal
+    _postiveCode: 275
+    _negativeCode: 276
+  - _name: Vertical
+    _postiveCode: 273
+    _negativeCode: 274
