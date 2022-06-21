@@ -13,13 +13,15 @@ public class CharacterController2D : MonoBehaviour
     private bool _useGravity;
     private float _gravityScale = -9.8f;
 
+    [SerializeField, Range(2, 10)]
+    private int raycastCount = 3;
 
     private void Awake()
     {
         _collider = GetComponent<BoxCollider2D>();
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         if (_useGravity)
         {
@@ -44,31 +46,45 @@ public class CharacterController2D : MonoBehaviour
 
     private void MoveHoriziontal(ref Vector2 deltaMovement)
     {
-        var isRight = deltaMovement.x > 0;
-        var rayDirection = isRight ? Vector2.right : Vector2.left;
-        var rayDistance = (_collider.bounds.size.x) / 2 + Mathf.Abs(deltaMovement.x);
+        int rightOffset = deltaMovement.x > 0 ? 1 : -1;
 
-        Debug.DrawRay(transform.position, rayDirection * rayDistance, Color.red);
-
-        var hit = Physics2D.Raycast(transform.position, rayDirection, rayDistance, layerMask);
-        if (hit)
+        for (int i = 0; i < raycastCount - 1; i++)
         {
-            deltaMovement.x = (Mathf.Abs(hit.point.x - transform.position.x) - (_collider.bounds.size.x) / 2) * (isRight ? 1 : -1);
+            float yOffset = (_collider.size.y) / (raycastCount - 1);
+            float xPosition = (transform.position.x + (_collider.size.x / 2) * rightOffset);
+            float yPosition = (transform.position.y + (_collider.size.y / 2) - yOffset * i);
+            Vector2 rayOrigin = new Vector2(xPosition, yPosition);
+            Vector2 rayDirection = Vector2.right * rightOffset;
+            float rayDistance = Mathf.Abs(deltaMovement.x);
+
+            Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.red);
+            var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, layerMask);
+            if (hit)
+            {
+                deltaMovement.x = (Mathf.Abs(hit.point.x - transform.position.x) - (_collider.bounds.size.x) / 2) * rightOffset;
+            }
         }
     }
 
     private void MoveVertical(ref Vector2 deltaMovement)
     {
-        var isUp = deltaMovement.y > 0;
-        var rayDirection = isUp ? Vector2.up : Vector2.down;
-        var rayDistance = (_collider.bounds.size.y) / 2 + Mathf.Abs(deltaMovement.y);
+        int upOffset = deltaMovement.y > 0 ? 1 : -1;
 
-        Debug.DrawRay(transform.position, rayDirection * rayDistance, Color.red);
-
-        var hit = Physics2D.Raycast(transform.position, rayDirection, rayDistance, layerMask);
-        if (hit)
+        for (int i = 0; i < raycastCount; i++)
         {
-            deltaMovement.y = (Mathf.Abs(hit.point.y - transform.position.y) - (_collider.bounds.size.y) / 2) * (isUp ? 1 : -1);
+            float xOffset = (_collider.size.x) / (raycastCount - 1);
+            float xPosition = (transform.position.x + (_collider.size.x / 2) - xOffset * i);
+            float yPosition = (transform.position.y + (_collider.size.y / 2) * upOffset);
+            Vector2 rayOrigin = new Vector2(xPosition, yPosition);
+            Vector2 rayDirection = Vector2.right * upOffset;
+            float rayDistance = Mathf.Abs(deltaMovement.y);
+
+            Debug.DrawRay(rayOrigin, rayDirection * rayDistance, Color.red);
+            var hit = Physics2D.Raycast(rayOrigin, rayDirection, rayDistance, layerMask);
+            if (hit)
+            {
+                deltaMovement.y = (Mathf.Abs(hit.point.y - transform.position.y) - (_collider.bounds.size.y) / 2) * upOffset;
+            }
         }
     }
 
